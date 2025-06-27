@@ -1,85 +1,60 @@
-# 这个工作流将安装Python依赖，运行测试和代码检查（使用单一Python版本）
-# 更多信息请参考: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-# 工作流名称，会显示在GitHub Actions页面
 name: arXiv-daily-ai-enhanced
 
-# 触发条件配置
 on:
-  # 定时任务：每天16:30 UTC执行（对应北京时间00:30）
   schedule:
     - cron: "30 16 * * *"
-  # 允许手动触发工作流
   workflow_dispatch:
 
 
 jobs:
-  # 定义构建任务
   build:
-    # 使用最新的Ubuntu运行环境
+
     runs-on: ubuntu-latest
 
     steps:
-    # 步骤1：检出代码到运行环境
     - uses: actions/checkout@v4
-    
-    # 步骤2：安装项目依赖
     - name: Install dependencies
       run: |
-        # 安装uv包管理器（Python包管理工具）
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        # 同步安装项目依赖（基于uv.lock文件）
         uv sync
-    
-    # 步骤3：运行主要脚本
     - name: Run script
       run: |
-        # 激活Python虚拟环境
         source .venv/bin/activate
-        # 设置环境变量（从GitHub Secrets和Variables获取）
-        export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}          # OpenAI API密钥
-        export OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL }}        # OpenAI API基础URL
-        export LANGUAGE="${{ vars.LANGUAGE }}"                       # 输出语言设置
-        export CATEGORIES="${{ vars.CATEGORIES }}"                   # 目标arXiv分类
-        export MODEL_NAME="${{ vars.MODEL_NAME }}"                   # AI模型名称
-        # 执行主要的爬取和处理脚本
+        export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+        export OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL }}
+        export LANGUAGE="${{ vars.LANGUAGE }}"
+        export CATEGORIES="${{ vars.CATEGORIES }}"
+        export MODEL_NAME="${{ vars.MODEL_NAME }}"
         bash run.sh
-    
-    # 步骤4：提交更改到Git仓库
     - name: commit
       run: |
-        # 配置Git用户信息（从GitHub Variables获取）
         git config --global user.email "${{ vars.EMAIL }}"
         git config --global user.name "${{ vars.NAME }}"
-        # 添加所有更改到暂存区
         git add .
         # 检查是否有变更需要提交
         if git diff --staged --quiet; then
           echo "No changes to commit"
           exit 0
         fi
-        # 提交更改，使用简单的提交信息
         git commit -m "update"
-    
-    # 步骤5：拉取最新更改并推送
     - name: Pull latest changes and push
       run: |
         # 设置Git配置以处理自动合并
-        git config pull.rebase true      # 使用rebase方式拉取
-        git config rebase.autoStash true # 自动暂存未提交的更改
+        git config pull.rebase true
+        git config rebase.autoStash true
         
-        # 尝试推送，如果失败则拉取并重试（最多3次）
+        # 尝试推送，如果失败则拉取并重试
         for i in {1..3}; do
           echo "Push attempt $i"
-          # 尝试推送到main分支
           if git push origin main; then
             echo "Push successful"
             break
           else
             echo "Push failed, pulling latest changes..."
-            # 推送失败时拉取最新更改（避免编辑器打开）
             git pull origin main --no-edit || true
-            # 如果是第3次尝试仍失败，则退出并报错
             if [ $i -eq 3 ]; then
               echo "Failed to push after 3 attempts"
               exit 1
