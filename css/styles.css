@@ -254,7 +254,7 @@ header {
   display: flex;
   align-items: center;
   gap: 4px;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   padding: 4px 8px;
   font-size: 12px;
@@ -262,18 +262,18 @@ header {
 }
 
 .star-badge svg {
-  fill: white;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  fill: var(--text-color);
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
 }
 
 .fork-badge svg {
-  fill: white;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  fill: var(--text-color);
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
 }
 
 .star-count,
 .fork-count {
-  color: white;
+  color: var(--text-color);
   font-weight: 600;
 }
 
@@ -668,9 +668,9 @@ main {
 }
 
 .paper-modal.active {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .paper-modal-content {
