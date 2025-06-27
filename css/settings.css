@@ -1,70 +1,62 @@
-/* 设置页面专用样式 - Next主题风格 */
+/* 设置页面专用样式 */
 .settings-page {
-  padding: var(--spacing-xl);
+  padding: 24px;
   max-width: 800px;
   margin: 0 auto;
   background-color: var(--background-color);
+  min-height: 100vh;
 }
 
 .settings-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: 24px;
 }
 
 .settings-header {
   text-align: center;
-  margin-bottom: var(--spacing-xl);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 24px;
 }
 
 .settings-header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm);
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--primary-color);
 }
 
 .settings-header p {
   color: var(--text-secondary);
   font-size: 16px;
-  line-height: 1.5;
 }
 
 .settings-content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: 32px;
 }
 
 .settings-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
-.keyword-section-title {
-  font-size: 18px;
+.settings-section h2 {
+  font-size: 20px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-light);
+  color: var(--text-color);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .settings-card {
-  background-color: var(--card-background);
-  border-radius: var(--radius-medium);
-  padding: var(--spacing-lg);
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border-light);
-  transition: var(--transition-fast);
-}
-
-.settings-card:hover {
-  box-shadow: var(--card-shadow-hover);
+  background-color: var(--card-bg-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .settings-item {
@@ -87,21 +79,22 @@
 .back-button {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-small);
-  color: var(--text-secondary);
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--text-color);
   font-size: 14px;
   font-weight: 500;
-  transition: var(--transition-fast);
-  text-decoration: none;
+  transition: var(--transition);
+  text-decoration: none !important;
   border: 1px solid var(--border-color);
+  background-color: var(--background-color);
 }
 
 .back-button:hover {
   background-color: var(--background-hover);
-  color: var(--text-primary);
-  border-color: var(--primary-color);
+  border-color: var(--accent-color);
+  text-decoration: none !important;
 }
 
 .back-button svg {
@@ -111,245 +104,239 @@
 .tag-selector {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  width: 180px;
+  gap: 12px;
+  width: 100%;
 }
 
 .selected-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  min-height: 48px;
-  padding: var(--spacing-md);
-  background-color: var(--background-secondary);
-  border-radius: var(--radius-medium);
-  border: 2px dashed var(--border-color);
-  transition: var(--transition-fast);
-}
-
-.selected-tags:hover {
-  border-color: var(--primary-color);
-  background-color: rgba(0, 102, 204, 0.02);
+  gap: 10px;
+  margin-bottom: 12px;
+  min-height: 40px;
+  padding: 8px;
+  background-color: var(--background-hover);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-color);
 }
 
 .selected-tags .category-tag {
   display: inline-flex;
   align-items: center;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: var(--radius-small);
-  padding: 6px 12px;
-  font-size: 13px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--transition-fast);
-  border: none;
-  gap: var(--spacing-xs);
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .selected-tags .category-tag:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--border-color);
   transform: translateY(-1px);
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .remove-tag {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  margin-left: var(--spacing-xs);
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin-left: 6px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  transition: var(--transition-fast);
-  line-height: 1;
+  transition: var(--transition);
+  opacity: 0.7;
 }
 
 .remove-tag:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: var(--primary-color);
+  opacity: 1;
   transform: scale(1.1);
 }
 
 .tag-input-container {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: 8px;
   position: relative;
 }
 
 .settings-input {
-  flex: 1;
-  padding: var(--spacing-md);
-  border-radius: var(--radius-small);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
-  background-color: var(--card-background);
-  color: var(--text-primary);
+  background-color: var(--background-color);
+  color: var(--text-color);
   font-size: 14px;
-  transition: var(--transition-fast);
+  transition: var(--transition);
+  width: 100%;
   outline: none;
-  font-family: var(--font-family);
 }
 
 .settings-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .settings-input::placeholder {
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
+  opacity: 0.7;
 }
 
 .add-tag-button {
-  background-color: var(--primary-color);
+  background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: var(--radius-small);
-  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: var(--transition);
   min-width: 80px;
-  flex-shrink: 0;
 }
 
 .add-tag-button:hover {
-  background-color: var(--primary-hover);
+  background: var(--secondary-color);
   transform: translateY(-1px);
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-md);
 }
 
 .add-tag-button:active {
   transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.keyword-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 12px;
+}
+
+.keyword-section-title svg {
+  color: var(--primary-color);
+  margin-right: 8px;
 }
 
 .empty-tag-message {
-  color: var(--text-tertiary);
-  font-size: 14px;
+  color: var(--text-secondary);
   font-style: italic;
   text-align: center;
-  padding: var(--spacing-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
+  padding: 12px;
+  background-color: var(--background-hover);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-color);
 }
 
 /* 标签动画效果 */
 .tag-appear {
-  animation: tagSlideIn 0.3s ease-out;
+  animation: tagAppear 0.3s ease forwards;
 }
 
 .tag-disappear {
-  animation: tagSlideOut 0.2s ease-in;
+  animation: tagDisappear 0.3s ease forwards;
 }
 
 .tag-highlight {
-  animation: tagPulse 0.5s ease-out;
+  animation: tagHighlight 0.6s ease forwards;
 }
 
-@keyframes tagSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-10px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes tagSlideOut {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-}
-
-@keyframes tagPulse {
+@keyframes tagAppear {
   0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tagDisappear {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(0.95) translateY(-2px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+}
+
+@keyframes tagHighlight {
+  0% {
+    background-color: var(--background-color);
     transform: scale(1);
   }
   50% {
+    background-color: var(--primary-color);
+    color: white;
     transform: scale(1.05);
-    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
   }
   100% {
+    background-color: var(--background-color);
     transform: scale(1);
   }
 }
 
+/* 覆盖默认按钮样式 */
 .settings-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-md);
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--border-light);
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
 }
 
 .settings-actions button {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-small);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--transition-fast);
-  min-width: 120px;
+  transition: var(--transition);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .settings-actions button.primary {
-  background-color: var(--primary-color);
+  background: var(--primary-color);
   color: white;
-  border: 1px solid var(--primary-color);
-}
-
-.settings-actions button:not(.primary) {
-  background-color: var(--background-secondary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-}
-
-.settings-actions button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--card-shadow);
-}
-
-.settings-actions button.primary:hover {
-  background-color: var(--primary-hover);
-  border-color: var(--primary-hover);
-}
-
-.settings-actions button:not(.primary):hover {
-  background-color: var(--background-hover);
-  color: var(--text-primary);
   border-color: var(--primary-color);
 }
 
+.settings-actions button:not(.primary) {
+  background-color: var(--background-color);
+  color: var(--text-secondary);
+}
+
+.settings-actions button:hover {
+  background-color: var(--background-hover);
+  border-color: var(--accent-color);
+}
+
 .settings-actions button:active {
-  transform: translateY(0);
+  transform: translateY(1px);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .settings-page {
-    padding: var(--spacing-lg) var(--spacing-md);
-  }
-  
-  .settings-header h1 {
-    font-size: 24px;
-  }
-  
-  .settings-card {
-    padding: var(--spacing-md);
+    padding: 16px;
   }
   
   .settings-item {
@@ -358,53 +345,16 @@
     gap: 8px;
   }
   
-  .tag-selector,
-  .tag-input-container {
-    width: 100%;
-  }
-  
+  .settings-input, 
   .add-tag-button {
-    min-width: auto;
+    width: 100%;
   }
   
   .settings-actions {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
   
   .settings-actions button {
-    min-width: auto;
     width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .settings-page {
-    padding: var(--spacing-md) var(--spacing-sm);
-  }
-  
-  .settings-header {
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .settings-header h1 {
-    font-size: 22px;
-  }
-  
-  .settings-header p {
-    font-size: 14px;
-  }
-  
-  .keyword-section-title {
-    font-size: 16px;
-  }
-  
-  .selected-tags {
-    padding: var(--spacing-sm);
-    min-height: 40px;
-  }
-  
-  .selected-tags .category-tag {
-    font-size: 12px;
-    padding: 4px 8px;
   }
 } 
