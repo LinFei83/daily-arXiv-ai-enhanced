@@ -46,20 +46,12 @@
 }
 
 .keyword-section-title {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
   font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
   border-bottom: 1px solid var(--border-light);
-}
-
-.keyword-section-title svg {
-  color: var(--primary-color);
-  flex-shrink: 0;
 }
 
 .settings-card {
@@ -76,9 +68,20 @@
 }
 
 .settings-item {
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-item:last-child {
+  margin-bottom: 0;
+}
+
+.settings-item label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .back-button {
@@ -108,8 +111,8 @@
 .tag-selector {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  width: 100%;
+  gap: var(--spacing-sm);
+  width: 180px;
 }
 
 .selected-tags {
@@ -349,8 +352,15 @@
     padding: var(--spacing-md);
   }
   
-  .tag-input-container {
+  .settings-item {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .tag-selector,
+  .tag-input-container {
+    width: 100%;
   }
   
   .add-tag-button {

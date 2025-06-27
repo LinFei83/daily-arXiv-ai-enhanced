@@ -538,7 +538,18 @@ main {
   visibility: visible;
 }
 
-.paper-modal-content,
+.paper-modal-content {
+  background-color: var(--card-background);
+  border-radius: var(--radius-large);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: scale(0.9);
+  transition: var(--transition);
+}
+
 .date-picker-content {
   background-color: var(--card-background);
   border-radius: var(--radius-large);
@@ -786,7 +797,15 @@ footer {
     border-top: 1px solid var(--border-light);
   }
   
-  .paper-modal-content,
+  .paper-modal-content {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .paper-sections {
+    grid-template-columns: 1fr;
+  }
+  
   .date-picker-content {
     margin: var(--spacing-md);
     max-width: calc(100vw - 32px);
@@ -874,31 +893,42 @@ footer {
 
 /* 论文详情部分 */
 .paper-sections {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
 }
 
 .paper-section {
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: var(--spacing-lg);
-}
-
-.paper-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+  background-color: rgba(0, 102, 204, 0.03);
+  border-radius: var(--radius-small);
+  padding: 16px;
+  border-left: 3px solid var(--primary-color);
 }
 
 .paper-section h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--primary-color);
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-sm);
 }
 
 .paper-section p {
   line-height: 1.6;
   color: var(--text-secondary);
+  margin: 0;
+}
+
+.original-abstract {
+  font-style: italic;
+  border-left: 3px solid var(--border-color);
+  padding-left: 16px;
+  color: var(--text-secondary);
+  background-color: var(--background-secondary);
+  padding: 12px 16px;
+  border-radius: var(--radius-small);
+  margin: 16px 0;
 }
 
 /* Flatpickr 自定义样式 */
