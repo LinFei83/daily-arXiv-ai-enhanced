@@ -185,7 +185,6 @@ header {
 .site-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none !important;
   color: var(--text-color);
   transition: var(--transition);
@@ -194,11 +193,6 @@ header {
 .site-logo:hover {
   text-decoration: none;
   opacity: 0.9;
-}
-
-.logo-image {
-  height: 36px;
-  width: auto;
 }
 
 .site-title {
@@ -237,7 +231,7 @@ header {
 }
 
 .github-button svg {
-  fill: white;
+  fill: var(--text-color);
 }
 
 .github-text {
