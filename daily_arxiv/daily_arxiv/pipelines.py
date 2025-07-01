@@ -20,6 +20,11 @@ class DuplicatesPipeline:
         self.seen_ids = set()
         self.data_dir = "../data"  # 相对于daily_arxiv目录的数据目录路径
         self.days_to_check = 15  # 只检查最近15天的数据
+        self.logger = None  # 将在open_spider中初始化
+    
+    def open_spider(self, spider):
+        """爬虫启动时初始化"""
+        self.logger = spider.logger
         self.load_recent_ids()
     
     def get_recent_date_files(self):
@@ -28,7 +33,8 @@ class DuplicatesPipeline:
         data_path = os.path.join(current_dir, self.data_dir)
         
         if not os.path.exists(data_path):
-            print(f"数据目录不存在: {data_path}")
+            if self.logger:
+                self.logger.warning(f"数据目录不存在: {data_path}")
             return []
         
         # 生成最近15天的日期列表
@@ -53,10 +59,12 @@ class DuplicatesPipeline:
             recent_files = self.get_recent_date_files()
             
             if not recent_files:
-                print("未找到最近15天的历史数据文件")
+                if self.logger:
+                    self.logger.info("未找到最近15天的数据文件")
                 return
             
-            print(f"找到 {len(recent_files)} 个最近15天的数据文件")
+            if self.logger:
+                self.logger.info(f"找到 {len(recent_files)} 个最近15天的数据文件")
             
             for file_path in recent_files:
                 try:
@@ -69,14 +77,18 @@ class DuplicatesPipeline:
                                     if 'id' in data:
                                         self.seen_ids.add(data['id'])
                                 except json.JSONDecodeError as e:
-                                    print(f"JSON解析错误 {os.path.basename(file_path)}:{line_num}: {e}")
+                                    if self.logger:
+                                        self.logger.warning(f"JSON解析错误 {os.path.basename(file_path)}:{line_num}: {e}")
                 except Exception as e:
-                    print(f"读取文件错误 {os.path.basename(file_path)}: {e}")
+                    if self.logger:
+                        self.logger.error(f"读取文件错误 {os.path.basename(file_path)}: {e}")
             
-            print(f"已加载最近15天内 {len(self.seen_ids)} 个论文ID用于去重检查")
+            if self.logger:
+                self.logger.info(f"已加载 {len(self.seen_ids)} 个论文ID用于去重检查")
             
         except Exception as e:
-            print(f"加载最近15天ID时出错: {e}")
+            if self.logger:
+                self.logger.error(f"加载最近15天ID时出错: {e}")
     
     def process_item(self, item, spider):
         """检查论文ID是否重复"""
@@ -86,10 +98,13 @@ class DuplicatesPipeline:
             raise DropItem("论文缺少ID字段")
         
         if paper_id in self.seen_ids:
-            raise DropItem(f"重复论文ID: {paper_id} (标题: {item.get('title', 'N/A')})")
+            title = item.get('title', 'N/A')
+            spider.logger.info(f"重复论文ID: {paper_id} (标题: {title})")
+            raise DropItem(f"重复论文ID: {paper_id}")
         
         # 添加到已见集合中
         self.seen_ids.add(paper_id)
+        spider.logger.debug(f"论文ID {paper_id} 通过去重检查")
         return item
 
 
