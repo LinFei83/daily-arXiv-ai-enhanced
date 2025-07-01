@@ -18,7 +18,7 @@ class DuplicatesPipeline:
     
     def __init__(self):
         self.seen_ids = set()
-        self.data_dir = "../data"  # 相对于daily_arxiv目录的数据目录路径
+        self.data_dir = "../../data"  # 相对于daily_arxiv/daily_arxiv目录的数据目录路径
         self.days_to_check = 15  # 只检查最近15天的数据
         self.logger = None  # 将在open_spider中初始化
     
@@ -30,12 +30,36 @@ class DuplicatesPipeline:
     def get_recent_date_files(self):
         """获取最近15天的数据文件路径"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        data_path = os.path.join(current_dir, self.data_dir)
         
-        if not os.path.exists(data_path):
+        # 尝试多个可能的数据目录路径
+        possible_paths = [
+            os.path.join(current_dir, self.data_dir),  # ../../data
+            os.path.join(current_dir, "../data"),      # ../data
+            os.path.join(current_dir, "../../data"),   # ../../data (明确指定)
+        ]
+        
+        # 查找项目根目录下的data文件夹
+        project_root = current_dir
+        while project_root != os.path.dirname(project_root):  # 直到根目录
+            potential_data_path = os.path.join(project_root, "data")
+            if os.path.exists(potential_data_path):
+                possible_paths.append(potential_data_path)
+                break
+            project_root = os.path.dirname(project_root)
+        
+        data_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                data_path = path
+                break
+        
+        if not data_path:
             if self.logger:
-                self.logger.warning(f"数据目录不存在: {data_path}")
+                self.logger.warning(f"数据目录不存在，已尝试路径: {possible_paths}")
             return []
+        
+        if self.logger:
+            self.logger.debug(f"使用数据目录: {data_path}")
         
         # 生成最近15天的日期列表
         today = datetime.now()
@@ -60,7 +84,7 @@ class DuplicatesPipeline:
             
             if not recent_files:
                 if self.logger:
-                    self.logger.info("未找到最近15天的数据文件")
+                    self.logger.info("未找到最近15天的历史数据文件，将进行首次运行去重检查")
                 return
             
             if self.logger:
