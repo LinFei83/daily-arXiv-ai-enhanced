@@ -63,6 +63,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    "daily_arxiv.pipelines.DuplicatesPipeline": 200,  # 去重pipeline优先执行
     "daily_arxiv.pipelines.DailyArxivPipeline": 300,
 }
 
