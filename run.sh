@@ -1,6 +1,22 @@
 today=`date -u "+%Y-%m-%d"`
-cd daily_arxiv
-scrapy crawl arxiv -o ../data/${today}.jsonl
+
+# 检查文件是否已存在且行数大于20行
+if [ -f "data/${today}.jsonl" ]; then
+    line_count=$(wc -l < "data/${today}.jsonl")
+    if [ "$line_count" -gt 20 ]; then
+        echo "文件 data/${today}.jsonl 已存在，共 $line_count 行 (>20)，跳过爬虫程序..."
+    else
+        echo "文件 data/${today}.jsonl 已存在但仅有 $line_count 行 (<=20)，重新运行爬虫..."
+        cd daily_arxiv
+        scrapy crawl arxiv -o ../data/${today}.jsonl
+        cd ..
+    fi
+else
+    echo "文件 data/${today}.jsonl 不存在，开始运行爬虫..."
+    cd daily_arxiv
+    scrapy crawl arxiv -o ../data/${today}.jsonl
+    cd ..
+fi
 
 cd ../ai
 python enhance.py --data ../data/${today}.jsonl

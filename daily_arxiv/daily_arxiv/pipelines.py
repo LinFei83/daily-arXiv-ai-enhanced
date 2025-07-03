@@ -30,36 +30,12 @@ class DuplicatesPipeline:
     def get_recent_date_files(self):
         """获取最近15天的数据文件路径"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
+        data_path = os.path.join(current_dir, self.data_dir)
         
-        # 尝试多个可能的数据目录路径
-        possible_paths = [
-            os.path.join(current_dir, self.data_dir),  # ../../data
-            os.path.join(current_dir, "../data"),      # ../data
-            os.path.join(current_dir, "../../data"),   # ../../data (明确指定)
-        ]
-        
-        # 查找项目根目录下的data文件夹
-        project_root = current_dir
-        while project_root != os.path.dirname(project_root):  # 直到根目录
-            potential_data_path = os.path.join(project_root, "data")
-            if os.path.exists(potential_data_path):
-                possible_paths.append(potential_data_path)
-                break
-            project_root = os.path.dirname(project_root)
-        
-        data_path = None
-        for path in possible_paths:
-            if os.path.exists(path):
-                data_path = path
-                break
-        
-        if not data_path:
+        if not os.path.exists(data_path):
             if self.logger:
-                self.logger.warning(f"数据目录不存在，已尝试路径: {possible_paths}")
+                self.logger.warning(f"数据目录不存在: {data_path}")
             return []
-        
-        if self.logger:
-            self.logger.debug(f"使用数据目录: {data_path}")
         
         # 生成最近15天的日期列表
         today = datetime.now()
@@ -122,8 +98,9 @@ class DuplicatesPipeline:
             raise DropItem("论文缺少ID字段")
         
         if paper_id in self.seen_ids:
-            title = item.get('title', 'N/A')
-            spider.logger.info(f"重复论文ID: {paper_id} (标题: {title})")
+            # 在去重阶段，title可能还未设置，所以显示paper_id作为标识
+            title = item.get('title', f'Paper {paper_id}')
+            spider.logger.info(f"发现重复论文: {paper_id} ({title})")
             raise DropItem(f"重复论文ID: {paper_id}")
         
         # 添加到已见集合中
