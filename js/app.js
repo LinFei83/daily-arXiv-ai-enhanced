@@ -393,7 +393,7 @@ function initDatePicker() {
     flatpickrInstance.destroy();
   }
   
-  // 创建可用日期的映射，用于禁用无效日期
+  // 创建可用日期的映射，用于样式区分
   const enabledDatesMap = {};
   availableDates.forEach(date => {
     enabledDatesMap[date] = true;
@@ -419,15 +419,20 @@ function initDatePicker() {
       scrollTitle: '滚动切换',
       toggleTitle: '点击切换 12/24 小时时制'
     },
-    enable: [
-      function(date) {
-        // 只启用有效日期
-        const dateStr = date.getFullYear() + "-" + 
-                        String(date.getMonth() + 1).padStart(2, '0') + "-" + 
-                        String(date.getDate()).padStart(2, '0');
-        return !!enabledDatesMap[dateStr];
+    // 移除enable限制，允许选择任意日期
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+      const dateStr = dayElem.dateObj.getFullYear() + "-" + 
+                      String(dayElem.dateObj.getMonth() + 1).padStart(2, '0') + "-" + 
+                      String(dayElem.dateObj.getDate()).padStart(2, '0');
+      
+      // 为没有数据的日期添加特殊样式
+      if (!enabledDatesMap[dateStr]) {
+        dayElem.classList.add('no-data');
+        dayElem.title = '此日期无数据';
+      } else {
+        dayElem.title = '此日期有数据';
       }
-    ],
+    },
     onChange: function(selectedDates, dateStr) {
       if (isRangeMode && selectedDates.length === 2) {
         // 处理日期范围选择
@@ -441,6 +446,9 @@ function initDatePicker() {
         if (availableDates.includes(selectedDate)) {
           loadPapersByDate(selectedDate);
           toggleDatePicker();
+        } else {
+          // 如果选择的日期没有数据，显示提示
+          alert('所选日期没有数据，请选择其他日期。');
         }
       }
     }
@@ -976,22 +984,43 @@ async function loadPapersByDateRange(startDate, endDate) {
     return date >= startDate && date <= endDate;
   });
   
+  // 计算日期范围内的总天数
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+  
   if (validDatesInRange.length === 0) {
-    alert('No available papers in the selected date range.');
+    alert(`所选日期范围 (${formatDate(startDate)} - ${formatDate(endDate)}) 内没有可用数据。`);
     return;
   }
   
   currentDate = `${startDate} to ${endDate}`;
-  document.getElementById('currentDate').textContent = `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  const dateDisplayText = startDate === endDate ? 
+    formatDate(startDate) : 
+    `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  
+  // 如果有缺失的日期，在显示中添加提示
+  let displayText = dateDisplayText;
+  if (validDatesInRange.length < totalDays && startDate !== endDate) {
+    displayText += ` (${validDatesInRange.length}/${totalDays} 天有数据)`;
+  }
+  
+  document.getElementById('currentDate').textContent = displayText;
   
   // 不再重置激活的关键词和作者
   // 而是保持当前选择状态
   
   const container = document.getElementById('paperContainer');
+  
+  // 更详细的加载提示
+  const loadingMessage = validDatesInRange.length < totalDays ? 
+    `Loading papers from ${formatDate(startDate)} to ${formatDate(endDate)}...<br><small>找到 ${validDatesInRange.length} 天的数据，共 ${totalDays} 天</small>` :
+    `Loading papers from ${formatDate(startDate)} to ${formatDate(endDate)}...`;
+  
   container.innerHTML = `
     <div class="loading-container">
       <div class="loading-spinner"></div>
-      <p>Loading papers from ${formatDate(startDate)} to ${formatDate(endDate)}...</p>
+      <p>${loadingMessage}</p>
     </div>
   `;
   
@@ -1002,14 +1031,14 @@ async function loadPapersByDateRange(startDate, endDate) {
     for (const date of validDatesInRange) {
       const response = await fetch(`data/${date}_AI_enhanced_Chinese.jsonl`);
       const text = await response.text();
-      const dataPapers = parseJsonlData(text, date);
+      const datePapers = parseJsonlData(text, date);
       
       // 合并数据
-      Object.keys(dataPapers).forEach(category => {
+      Object.keys(datePapers).forEach(category => {
         if (!allPaperData[category]) {
           allPaperData[category] = [];
         }
-        allPaperData[category] = allPaperData[category].concat(dataPapers[category]);
+        allPaperData[category] = allPaperData[category].concat(datePapers[category]);
       });
     }
     
