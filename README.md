@@ -1,9 +1,13 @@
 # 关于
+
+本项目基于 [dw-dengwei/daily-arXiv-ai-enhanced](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced) 项目进行修改
+
 这个工具会每天爬取 https://arxiv.org 并使用大语言模型对论文进行总结。
 
-在线体验：https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/
+在线体验：https://linfei83.github.io/daily-arXiv-ai-enhanced/
 
 # 功能特性
+
 - 使用GitHub Actions和GitHub Pages的免费功能，**无需服务器**
 - 每天凌晨开始爬取数据，并使用DeepSeek进行总结。这个时段是DeepSeek的非高峰折扣期，每天仅需约0.2元人民币。
 - 提供GitHub Pages前端界面，使用LocalStorage存储**个性化偏好**信息（如感兴趣的关键词和作者），并高亮显示匹配偏好的论文。
@@ -12,20 +16,20 @@
 # 截图展示
 - 主页面。高亮显示感兴趣的关键词和作者。
 
-<img src="images/index.png" alt="main-page" width="800">
+![image-20250704093851668](https://image.linfei.ink:8888/i/2025/07/04/fis5hv-0.png)
 
 - 设置页面。设置关键词和作者并存储在您的浏览器中。
 
-<img src="images/setting.png" alt="setting-page" width="600">
+![image-20250704093915031](https://image.linfei.ink:8888/i/2025/07/04/fj5ifo-0.png)
 
 - 详情页面。显示您点击的论文的详细信息。
 
-<img src="images/details.png" alt="detail-page" width="500">
+![image-20250704094003431](https://image.linfei.ink:8888/i/2025/07/04/fjodh8-0.png)
 
-- 日期选择。支持选择单个日期或日期范围来筛选论文（**注意：较大的日期范围会显示大量论文，可能导致浏览器卡顿。**）。
+- 日期选择。支持选择单个日期或日期范围来筛选论文（**注意：较大的日期范围会显示大量论文，可能导致浏览器卡顿。**）。  
 
-<img src="images/single-date.png" alt="single-date" width="300">
-<img src="images/range-date.png" alt="range-date" width="300">
+![image-20250704094031464](https://image.linfei.ink:8888/i/2025/07/04/fjuhp8-0.png)
+
 
 - 统计页面（*开发中*）。帮助您分析论文。为您选择的日期提取论文关键词。此外，如果您选择日期范围，将显示关键词趋势图。（幸运的是，选择大范围的论文**不会**导致浏览器卡顿，因为此页面不会显示所有论文。处理关键词可能需要几秒钟。）
 
@@ -115,13 +119,16 @@ CATEGORIES="cs.CV, cs.GR, cs.CL, cs.AI"
 完整的arXiv分类列表请参考：https://arxiv.org/category_taxonomy
 
 # 待办事项
+
 - [x] 功能：用GitHub Pages前端替换markdown。
 - [ ] 修复：在统计页面中，关键词的论文数量不正确。
 - [ ] 修复：在日期选择器中，日期和星期不对应。
 - [ ] 功能：使用DeepSeek提取关键词。
 - [x] 更新Fork用户关于如何使用GitHub Pages的说明。
+- [x] 去除重复论文
 
 # 贡献者
+
 感谢以下特别贡献者对此项目的贡献！！！
 <table>
   <tbody>
