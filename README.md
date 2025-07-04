@@ -40,7 +40,7 @@
 # 使用方法
 此仓库将每天爬取关于**cs.CV、cs.GR、cs.CL和cs.AI**的arXiv论文，并使用**DeepSeek**以**中文**总结论文。
 如果您希望爬取其他arXiv类别、使用其他大语言模型或其他语言，请按照说明操作。
-否则，您可以直接使用 https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/。如果您喜欢请给个星标 :)
+否则，您可以直接使用 https://linfei83.github.io/daily-arXiv-ai-enhanced/。如果您喜欢请给个星标 :)
 
 **操作步骤：**
 1. 将此仓库Fork到您自己的账户
@@ -167,4 +167,4 @@ CATEGORIES="cs.CV, cs.GR, cs.CL, cs.AI"
 
 # 星标历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=dw-dengwei/daily-arXiv-ai-enhanced&type=Date)](https://www.star-history.com/#dw-dengwei/daily-arXiv-ai-enhanced&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=linfei83/daily-arXiv-ai-enhanced&type=Date)](https://www.star-history.com/#linfei83/daily-arXiv-ai-enhanced&Date)
