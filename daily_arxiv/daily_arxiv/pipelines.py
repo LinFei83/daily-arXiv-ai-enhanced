@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 
 class DuplicatesPipeline:
-    """去重Pipeline，支持跨天去重检查（最近15天）"""
+    """去重Pipeline，支持跨天去重检查（最近15天），从AI增强文件中加载已有论文ID"""
     
     def __init__(self):
         self.seen_ids = set()
@@ -28,7 +28,7 @@ class DuplicatesPipeline:
         self.load_recent_ids()
     
     def get_recent_date_files(self):
-        """获取最近15天的数据文件路径"""
+        """获取最近15天的AI增强数据文件路径"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
         data_path = os.path.join(current_dir, self.data_dir)
         
@@ -44,27 +44,47 @@ class DuplicatesPipeline:
             date = today - timedelta(days=i)
             recent_dates.append(date.strftime("%Y-%m-%d"))
         
-        # 查找对应日期的.jsonl文件
+        # 查找对应日期的AI增强文件，支持多种语言
         recent_files = []
         for date_str in recent_dates:
-            file_pattern = os.path.join(data_path, f"{date_str}.jsonl")
-            if os.path.exists(file_pattern):
-                recent_files.append(file_pattern)
+            # 查找所有可能的AI增强文件模式
+            ai_enhanced_patterns = [
+                f"{date_str}_AI_enhanced_Chinese.jsonl",
+                f"{date_str}_AI_enhanced_English.jsonl", 
+                f"{date_str}_AI_enhanced_*.jsonl"
+            ]
+            
+            for pattern in ai_enhanced_patterns:
+                if '*' in pattern:
+                    # 使用glob匹配通配符模式
+                    file_pattern = os.path.join(data_path, pattern)
+                    matching_files = glob.glob(file_pattern)
+                    recent_files.extend(matching_files)
+                else:
+                    # 直接检查文件是否存在
+                    file_path = os.path.join(data_path, pattern)
+                    if os.path.exists(file_path):
+                        recent_files.append(file_path)
+        
+        # 去重（因为可能有重复的文件路径）
+        recent_files = list(set(recent_files))
         
         return recent_files
     
     def load_recent_ids(self):
-        """加载最近15天数据中的所有论文ID"""
+        """加载最近15天AI增强数据中的所有论文ID"""
         try:
             recent_files = self.get_recent_date_files()
             
             if not recent_files:
                 if self.logger:
-                    self.logger.info("未找到最近15天的历史数据文件，将进行首次运行去重检查")
+                    self.logger.info("未找到最近15天的AI增强历史数据文件，将进行首次运行去重检查")
                 return
             
             if self.logger:
-                self.logger.info(f"找到 {len(recent_files)} 个最近15天的数据文件")
+                self.logger.info(f"找到 {len(recent_files)} 个最近15天的AI增强数据文件")
+                for file_path in recent_files:
+                    self.logger.debug(f"加载文件: {os.path.basename(file_path)}")
             
             for file_path in recent_files:
                 try:
@@ -84,11 +104,11 @@ class DuplicatesPipeline:
                         self.logger.error(f"读取文件错误 {os.path.basename(file_path)}: {e}")
             
             if self.logger:
-                self.logger.info(f"已加载 {len(self.seen_ids)} 个论文ID用于去重检查")
+                self.logger.info(f"已从AI增强文件中加载 {len(self.seen_ids)} 个论文ID用于去重检查")
             
         except Exception as e:
             if self.logger:
-                self.logger.error(f"加载最近15天ID时出错: {e}")
+                self.logger.error(f"加载最近15天AI增强数据ID时出错: {e}")
     
     def process_item(self, item, spider):
         """检查论文ID是否重复"""

@@ -5,14 +5,14 @@ cd daily_arxiv
 if [ -f "data/${today}.jsonl" ]; then
     line_count=$(wc -l < "data/${today}.jsonl")
     if [ "$line_count" -gt 20 ]; then
-        echo "文件 data/${today}.jsonl 已存在，共 $line_count 行 (>20)，跳过爬虫程序..."
+        echo "文件 data/${today}_AI_enhanced_${LANGUAGE}.jsonl 已存在，共 $line_count 行 (>20)，跳过爬虫程序..."
     else
-        echo "文件 data/${today}.jsonl 已存在但仅有 $line_count 行 (<=20)，重新运行爬虫..."
-        scrapy crawl arxiv -o ../data/${today}.jsonl
+        echo "文件 data/${today}_AI_enhanced_${LANGUAGE}.jsonl 已存在但仅有 $line_count 行 (<=20)，重新运行爬虫..."
+        scrapy crawl arxiv -o ../data/${today}_AI_enhanced_${LANGUAGE}.jsonl
     fi
 else
-    echo "文件 data/${today}.jsonl 不存在，开始运行爬虫..."
-    scrapy crawl arxiv -o ../data/${today}.jsonl
+    echo "文件 data/${today}_AI_enhanced_${LANGUAGE}.jsonl 不存在，开始运行爬虫..."
+    scrapy crawl arxiv -o ../data/${today}_AI_enhanced_${LANGUAGE}.jsonl
 fi
 
 cd ../ai
