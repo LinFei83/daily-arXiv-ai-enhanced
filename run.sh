@@ -1,5 +1,5 @@
-# today=`date -u "+%Y-%m-%d"`
-today="2025-07-06"
+today=`date -u "+%Y-%m-%d"`
+# today="2025-07-06"
 cd daily_arxiv
 # 检查文件是否已存在且行数大于20行
 if [ -f "../data/${today}.jsonl" ]; then
