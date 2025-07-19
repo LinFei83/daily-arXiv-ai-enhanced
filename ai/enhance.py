@@ -48,11 +48,13 @@ def parse_llm_response(response_text):
     try:
         # 尝试直接解析整个响应为JSON
         data = json.loads(response_text)
-        # 将字符串值转换为Unicode转义序列格式
+        # 将字符串值转换为Unicode转义序列格式，但只保留一个反斜杠
         for key, value in data.items():
             if isinstance(value, str):
-                # 将字符串重新编码为Unicode转义序列
-                data[key] = json.dumps(value, ensure_ascii=True)[1:-1]
+                # 先转换为Unicode转义序列
+                escaped = json.dumps(value, ensure_ascii=True)[1:-1]
+                # 将双反斜杠替换为单反斜杠
+                data[key] = escaped.replace('\\\\', '\\')
         return data
     except json.JSONDecodeError:
         # 如果失败，尝试提取JSON部分
@@ -63,22 +65,24 @@ def parse_llm_response(response_text):
             if start_idx >= 0 and end_idx > start_idx:
                 json_str = response_text[start_idx:end_idx]
                 data = json.loads(json_str)
-                # 将字符串值转换为Unicode转义序列格式
+                # 将字符串值转换为Unicode转义序列格式，但只保留一个反斜杠
                 for key, value in data.items():
                     if isinstance(value, str):
-                        # 将字符串重新编码为Unicode转义序列
-                        data[key] = json.dumps(value, ensure_ascii=True)[1:-1]
+                        # 先转换为Unicode转义序列
+                        escaped = json.dumps(value, ensure_ascii=True)[1:-1]
+                        # 将双反斜杠替换为单反斜杠
+                        data[key] = escaped.replace('\\\\', '\\')
                 return data
         except (json.JSONDecodeError, ValueError):
             pass
         
         # 如果仍然失败，返回错误结构
         return {
-            "tldr": "\\u89e3\\u6790\\u9519\\u8bef",
-            "motivation": "\\u89e3\\u6790\\u9519\\u8bef",
-            "method": "\\u89e3\\u6790\\u9519\\u8bef",
-            "result": "\\u89e3\\u6790\\u9519\\u8bef",
-            "conclusion": "\\u89e3\\u6790\\u9519\\u8bef"
+            "tldr": "\u89e3\u6790\u9519\u8bef",
+            "motivation": "\u89e3\u6790\u9519\u8bef",
+            "method": "\u89e3\u6790\u9519\u8bef",
+            "result": "\u89e3\u6790\u9519\u8bef",
+            "conclusion": "\u89e3\u6790\u9519\u8bef"
         }
 
 def main():
