@@ -43,6 +43,32 @@ def load_existing_ids(output_file):
             print(f"读取现有文件时出错: {e}", file=sys.stderr)
     return existing_ids
 
+def parse_llm_response(response_text):
+    """解析LLM返回的文本为结构化数据"""
+    try:
+        # 尝试直接解析整个响应为JSON
+        return json.loads(response_text)
+    except json.JSONDecodeError:
+        # 如果失败，尝试提取JSON部分
+        try:
+            # 查找可能的JSON开始和结束位置
+            start_idx = response_text.find('{')
+            end_idx = response_text.rfind('}') + 1
+            if start_idx >= 0 and end_idx > start_idx:
+                json_str = response_text[start_idx:end_idx]
+                return json.loads(json_str)
+        except (json.JSONDecodeError, ValueError):
+            pass
+        
+        # 如果仍然失败，返回错误结构
+        return {
+            "tldr": "解析错误",
+            "motivation": "解析错误",
+            "method": "解析错误",
+            "result": "解析错误",
+            "conclusion": "解析错误"
+        }
+
 def main():
     args = parse_args()
     model_name = os.environ.get("MODEL_NAME", 'deepseek-chat')
@@ -80,8 +106,8 @@ def main():
 
     print('Open:', args.data, file=sys.stderr)
 
-    # 修改这里，使用structured_output而不是function_calling
-    llm = ChatOpenAI(model=model_name).with_structured_output(Structure)
+    # 不使用function_calling，直接使用LLM
+    llm = ChatOpenAI(model=model_name)
     print('Connect to:', model_name, file=sys.stderr)
     prompt_template = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(system),
@@ -92,12 +118,25 @@ def main():
 
     for idx, d in enumerate(data):
         try:
-            response: Structure = chain.invoke({
+            # 获取文本响应
+            response = chain.invoke({
                 "language": language,
                 "content": d['summary']
             })
-            d['AI'] = response.model_dump()
-        except langchain_core.exceptions.OutputParserException as e:
+            
+            # 解析响应为结构化数据
+            response_text = response.content
+            structured_data = parse_llm_response(response_text)
+            
+            # 确保所有必要字段都存在
+            required_fields = ["tldr", "motivation", "method", "result", "conclusion"]
+            for field in required_fields:
+                if field not in structured_data:
+                    structured_data[field] = "未提供"
+            
+            d['AI'] = structured_data
+            
+        except Exception as e:
             print(f"{d['id']} has an error: {e}", file=sys.stderr)
             d['AI'] = {
                  "tldr": "Error",
