@@ -1,6 +1,8 @@
 # today=`date -u "+%Y-%m-%d"`
 today="2025-6-15"
 cd daily_arxiv
+# 导出TODAY环境变量供pipelines.py使用
+export TODAY=${today}
 # 检查文件是否已存在且行数大于20行
 if [ -f "../data/${today}.jsonl" ]; then
     line_count=$(wc -l < "../data/${today}.jsonl")

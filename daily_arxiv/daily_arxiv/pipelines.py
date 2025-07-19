@@ -21,6 +21,8 @@ class DuplicatesPipeline:
         self.data_dir = "../../data"  # 相对于daily_arxiv/daily_arxiv目录的数据目录路径
         self.days_to_check = 15  # 只检查最近15天的数据
         self.logger = None  # 将在open_spider中初始化
+        # 获取环境变量中的today值，如果不存在则使用当前日期
+        self.today_str = os.environ.get('TODAY', None)
     
     def open_spider(self, spider):
         """爬虫启动时初始化"""
@@ -38,7 +40,18 @@ class DuplicatesPipeline:
             return []
         
         # 生成最近15天的日期列表
-        today = datetime.now()
+        if self.today_str:
+            try:
+                # 尝试解析环境变量中的日期
+                today = datetime.strptime(self.today_str, "%Y-%m-%d")
+            except ValueError:
+                # 如果解析失败，使用当前日期并记录警告
+                if self.logger:
+                    self.logger.warning(f"无法解析环境变量TODAY的值: {self.today_str}，将使用当前日期")
+                today = datetime.now()
+        else:
+            today = datetime.now()
+            
         recent_dates = []
         for i in range(self.days_to_check):
             date = today - timedelta(days=i)
