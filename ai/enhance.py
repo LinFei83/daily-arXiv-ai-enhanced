@@ -47,7 +47,13 @@ def parse_llm_response(response_text):
     """解析LLM返回的文本为结构化数据"""
     try:
         # 尝试直接解析整个响应为JSON
-        return json.loads(response_text)
+        data = json.loads(response_text)
+        # 将字符串值转换为Unicode转义序列格式
+        for key, value in data.items():
+            if isinstance(value, str):
+                # 将字符串重新编码为Unicode转义序列
+                data[key] = json.dumps(value, ensure_ascii=True)[1:-1]
+        return data
     except json.JSONDecodeError:
         # 如果失败，尝试提取JSON部分
         try:
@@ -56,17 +62,23 @@ def parse_llm_response(response_text):
             end_idx = response_text.rfind('}') + 1
             if start_idx >= 0 and end_idx > start_idx:
                 json_str = response_text[start_idx:end_idx]
-                return json.loads(json_str)
+                data = json.loads(json_str)
+                # 将字符串值转换为Unicode转义序列格式
+                for key, value in data.items():
+                    if isinstance(value, str):
+                        # 将字符串重新编码为Unicode转义序列
+                        data[key] = json.dumps(value, ensure_ascii=True)[1:-1]
+                return data
         except (json.JSONDecodeError, ValueError):
             pass
         
         # 如果仍然失败，返回错误结构
         return {
-            "tldr": "解析错误",
-            "motivation": "解析错误",
-            "method": "解析错误",
-            "result": "解析错误",
-            "conclusion": "解析错误"
+            "tldr": "\\u89e3\\u6790\\u9519\\u8bef",
+            "motivation": "\\u89e3\\u6790\\u9519\\u8bef",
+            "method": "\\u89e3\\u6790\\u9519\\u8bef",
+            "result": "\\u89e3\\u6790\\u9519\\u8bef",
+            "conclusion": "\\u89e3\\u6790\\u9519\\u8bef"
         }
 
 def main():
