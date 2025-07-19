@@ -80,7 +80,8 @@ def main():
 
     print('Open:', args.data, file=sys.stderr)
 
-    llm = ChatOpenAI(model=model_name).with_structured_output(Structure, method="function_calling")
+    # 修改这里，使用structured_output而不是function_calling
+    llm = ChatOpenAI(model=model_name).with_structured_output(Structure)
     print('Connect to:', model_name, file=sys.stderr)
     prompt_template = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(system),
