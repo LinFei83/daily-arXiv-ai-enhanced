@@ -118,6 +118,18 @@ CATEGORIES="cs.CV, cs.GR, cs.CL, cs.AI"
 
 完整的arXiv分类列表请参考：https://arxiv.org/category_taxonomy
 
+# 并发配置
+
+`CONCURRENT_REQUESTS` 环境变量用于控制对 AI 模型进行 API 调用的并发请求数。增加此值可以加快论文处理速度，但可能会增加达到速率限制的风险。
+
+**配置方法：**
+
+1.  进入您的 GitHub 仓库。
+2.  导航到 `Settings > Secrets and variables > Actions`。
+3.  在 `Repository variables` 部分，创建或更新名为 `CONCURRENT_REQUESTS` 的变量。
+    -   **建议值**：`5` (默认)
+    -   **更高性能**：`10` (如果您的 API 账户允许更高的速率限制)
+
 # 待办事项
 
 - [x] 功能：用GitHub Pages前端替换markdown。

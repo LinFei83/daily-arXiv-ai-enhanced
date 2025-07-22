@@ -137,6 +137,7 @@ def main():
 
     processed_data = []
     for i, (d, result) in enumerate(zip(data, results)):
+        print(f"正在处理第 {i+1}/{len(data)} 篇论文: {d['id']}", file=sys.stderr)
         try:
             if isinstance(result, Exception):
                 raise result
