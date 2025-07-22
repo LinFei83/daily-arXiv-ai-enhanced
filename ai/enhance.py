@@ -81,6 +81,7 @@ def main():
     args = parse_args()
     model_name = os.environ.get("MODEL_NAME", 'deepseek-chat')
     language = os.environ.get("LANGUAGE", 'Chinese')
+    concurrent_requests = int(os.environ.get("CONCURRENT_REQUESTS", 5))
 
     # 构建输出文件名
     output_file = args.data.replace('.jsonl', f'_AI_enhanced_{language}.jsonl')
@@ -124,16 +125,24 @@ def main():
 
     chain = prompt_template | llm
 
-    for idx, d in enumerate(data):
+    # 准备批量处理的输入
+    batch_inputs = [{"language": language, "content": d['summary']} for d in data]
+    
+    print(f"正在以 {concurrent_requests} 的并发数处理 {len(batch_inputs)} 篇论文...", file=sys.stderr)
+    
+    # 使用 chain.batch 并行处理
+    results = chain.batch(batch_inputs, {"max_concurrency": concurrent_requests})
+    
+    print("所有论文处理完成。", file=sys.stderr)
+
+    processed_data = []
+    for i, (d, result) in enumerate(zip(data, results)):
         try:
-            # 获取文本响应
-            response = chain.invoke({
-                "language": language,
-                "content": d['summary']
-            })
-            
+            if isinstance(result, Exception):
+                raise result
+
             # 解析响应为结构化数据
-            response_text = response.content
+            response_text = result.content
             structured_data = parse_llm_response(response_text)
             
             # 确保所有必要字段都存在
@@ -153,10 +162,14 @@ def main():
                  "result": "Error",
                  "conclusion": "Error"
             }
-        with open(output_file, "a", encoding='utf-8') as f:
-            f.write(json.dumps(d, ensure_ascii=False) + "\n")
+        processed_data.append(d)
 
-        print(f"Finished {idx+1}/{len(data)}", file=sys.stderr)
+    # 一次性或分批写入文件
+    with open(output_file, "a", encoding='utf-8') as f:
+        for item in processed_data:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+
+    print(f"成功将 {len(processed_data)} 条处理过的数据写入 {output_file}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()
