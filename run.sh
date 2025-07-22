@@ -1,5 +1,5 @@
-today=`date -u "+%Y-%m-%d"`
-# today="2025-6-15"
+# today=`date -u "+%Y-%m-%d"`
+today="2025-7-21"
 cd daily_arxiv
 # 导出TODAY环境变量供pipelines.py使用
 export TODAY=${today}
