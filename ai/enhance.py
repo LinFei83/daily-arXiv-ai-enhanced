@@ -45,7 +45,7 @@ def load_existing_ids(output_file):
 
 import json
  
-def parse_llm_response_simplified(response_text):
+def parse_llm_response(response_text):
     """
     解析LLM返回的文本为结构化数据。
     这个版本会保留原始的UTF-8字符（如中文），而不是转换成Unicode转义序列。
