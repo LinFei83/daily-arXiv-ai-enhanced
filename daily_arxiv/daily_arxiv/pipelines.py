@@ -145,7 +145,14 @@ class DuplicatesPipeline:
 class DailyArxivPipeline:
     def __init__(self):
         self.page_size = 100
-        self.client = arxiv.Client(self.page_size)
+        # arxiv库在请求之间默认有3秒的延迟，以遵守API使用礼仪。
+        # 日志中的 "INFO: Sleeping: ..." 就来源于此。
+        # 我们可以覆盖这个设置。
+        self.client = arxiv.Client(
+            page_size=self.page_size,
+            delay_seconds=1.2,
+            num_retries=3
+        )
 
     def process_item(self, item: dict, spider):
         item["pdf"] = f"https://arxiv.org/pdf/{item['id']}"
