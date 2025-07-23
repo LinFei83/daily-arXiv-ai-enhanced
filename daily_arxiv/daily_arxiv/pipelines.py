@@ -150,7 +150,7 @@ class DailyArxivPipeline:
         # 我们可以覆盖这个设置。
         self.client = arxiv.Client(
             page_size=self.page_size,
-            delay_seconds=1.2,
+            delay_seconds=3,
             num_retries=3
         )
 
