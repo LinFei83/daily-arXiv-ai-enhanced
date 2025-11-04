@@ -83,7 +83,7 @@ function renderKeywordTags() {
     tagElement.dataset.keyword = keyword;
     tagElement.textContent = keyword;
     // 添加提示信息，解释关键词匹配的范围
-    tagElement.title = "匹配标题和摘要中的关键词";
+    tagElement.title = "匹配标题、摘要和原文摘要中的关键词";
     
     tagElement.addEventListener('click', () => {
       toggleKeywordFilter(keyword);
@@ -684,8 +684,8 @@ function renderPapers() {
     filteredPapers.sort((a, b) => {
       const aMatchesKeyword = activeKeywords.length > 0 ? 
         activeKeywords.some(keyword => {
-          // 仅在标题和摘要中搜索关键词
-          const searchText = `${a.title} ${a.summary}`.toLowerCase();
+          // 在标题、摘要和原文摘要中搜索关键词
+          const searchText = `${a.title} ${a.summary} ${a.details || ''}`.toLowerCase();
           return searchText.includes(keyword.toLowerCase());
         }) : false;
         
@@ -697,8 +697,8 @@ function renderPapers() {
         
       const bMatchesKeyword = activeKeywords.length > 0 ?
         activeKeywords.some(keyword => {
-          // 仅在标题和摘要中搜索关键词
-          const searchText = `${b.title} ${b.summary}`.toLowerCase();
+          // 在标题、摘要和原文摘要中搜索关键词
+          const searchText = `${b.title} ${b.summary} ${b.details || ''}`.toLowerCase();
           return searchText.includes(keyword.toLowerCase());
         }) : false;
         
@@ -721,7 +721,7 @@ function renderPapers() {
     filteredPapers.forEach(paper => {
       const matchesKeyword = activeKeywords.length > 0 ?
         activeKeywords.some(keyword => {
-          const searchText = `${paper.title} ${paper.summary}`.toLowerCase();
+          const searchText = `${paper.title} ${paper.summary} ${paper.details || ''}`.toLowerCase();
           return searchText.includes(keyword.toLowerCase());
         }) : false;
         
@@ -738,7 +738,7 @@ function renderPapers() {
         paper.matchReason = [];
         if (matchesKeyword) {
           const matchedKeywords = activeKeywords.filter(keyword => 
-            `${paper.title} ${paper.summary}`.toLowerCase().includes(keyword.toLowerCase())
+            `${paper.title} ${paper.summary} ${paper.details || ''}`.toLowerCase().includes(keyword.toLowerCase())
           );
           if (matchedKeywords.length > 0) {
             paper.matchReason.push(`关键词: ${matchedKeywords.join(', ')}`);
@@ -851,8 +851,10 @@ function showPaperDetails(paper) {
     ? highlightMatches(paper.summary, activeKeywords, 'keyword-highlight') 
     : paper.summary;
   
-  // 不再高亮详情中的关键词，只有在标题和摘要中高亮
-  const highlightedAbstract = abstractText;
+  // 高亮原文摘要中的关键词
+  const highlightedAbstract = activeKeywords.length > 0 
+    ? highlightMatches(abstractText, activeKeywords, 'keyword-highlight') 
+    : abstractText;
   
   // 高亮其他部分（如果存在且是摘要的一部分）
   const highlightedMotivation = paper.motivation && activeKeywords.length > 0 
