@@ -47,6 +47,9 @@
 2. 进入：您的仓库 -> Settings -> Secrets and variables -> Actions
 3. 进入Secrets。Secrets是加密的，用于敏感数据
 4. 创建两个名为`OPENAI_API_KEY`和`OPENAI_BASE_URL`的仓库密钥，并输入相应的值。
+```yaml
+OPENAI_BASE_URL=https://api.deepseek.com/v1
+```
 5. 进入Variables。Variables以明文显示，用于非敏感数据
 6. 创建以下仓库变量：
    1. `CATEGORIES`：用","分隔类别，如"cs.CL, cs.CV"
@@ -56,7 +59,7 @@
    5. `NAME`：您的姓名，用于推送到GitHub
 7. 进入您的仓库 -> Actions -> arXiv-daily-ai-enhanced
 8. 您可以手动点击**Run workflow**来测试是否正常工作（可能需要约一小时）。默认情况下，此操作将每天自动运行。您可以在`.github/workflows/run.yml`中修改。
-9. 设置GitHub Pages：进入您的仓库 -> Settings -> Pages。在`Build and deployment`中，设置`Source="Deploy from a branch"`，`Branch="main", "/(root)"`。等待几分钟，访问 https://\<username\>.github.io/daily-arXiv-ai-enhanced/。请查看此[issue](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/issues/14)获取更详细的说明。
+9.  设置GitHub Pages：进入您的仓库 -> Settings -> Pages。在`Build and deployment`中，设置`Source="Deploy from a branch"`，`Branch="main", "/(root)"`。等待几分钟，访问 https://\<username\>.github.io/daily-arXiv-ai-enhanced/。请查看此[issue](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/issues/14)获取更详细的说明。
 
 # CATEGORIES配置说明
 
